@@ -1,0 +1,3 @@
+void uvolniMapu(Mapa *mapa) {
+
+}
