@@ -1,28 +1,43 @@
-#ifndef NAHODNA_POCHODZKA_POS_MAPA_H
-#define NAHODNA_POCHODZKA_POS_MAPA_H
+//
+// Created by annab on 31/12/2025.
+//
 
-#include "struktury.h"
+#ifndef NAHODNAPOCHODZKA_MAPA_H
+#define NAHODNAPOCHODZKA_MAPA_H
 #include <stdio.h>
 
-//Funkcia na vytvorenie mapy v pamati
-void alokujMapu(Mapa *mapa,int sirka, int vyska);
+#include "structures.h"
 
-//Funkcia na dealokaciu mapy
-void uvolniMapu(Mapa *mapa);
 
-//Funkcia na prepocitanie suradnic z 2D pola n splostene 1D pole
-int getIndexMapa(Mapa *mapa, int x, int y);
+//Funkcia na vytvorenie mapy
+void alokuj_mapu(Mapa *mapa, int sirka, int vyska);
 
-//Funkcia na zistenie, ci na policku nie je prekazka
-bool jeVolno(const Mapa *mapa, int x, int y);
+//Funkcia na dealokaciu pamate
+void uvolni_mapu(Mapa *mapa);
 
-//Funkcia na nastavenie policka - bez alebo s prekazkou
-void nastavPolicko(Mapa *mapa, int x, int y, bool jePrekazka);
+//Funkcia, ktora prepocita suradnicu v 2D poli x,y na index v 1D poli
+int get_index_mapy(const Mapa *mapa, int x, int y);
 
-//Kontrola ci sa zovsadial da dostat do stredu
-bool jeMapaPriechodna(const Mapa *mapa);
+//Funkcia ktora zisti, ci je na suradnici x,y prekazka
+bool je_tam_volno(const Mapa *m, int x, int y);
 
-//Funkcia na generovanie prekazok podla hustoty
-void generujPrekazky(Mapa *mapa, double hustota);
+//Funkcia, ktora na danom indexe nastavi prekazku
+void nastav_prekazku(Mapa *mapa, int x, int y, bool je_prekazka);
 
-#endif //NAHODNA_POCHODZKA_POS_MAPA_H
+//Funkcia, ktora vygeneruje prekazky na zaklade percentualneho pokrytia
+void generuj_prekazky(Mapa *mapa, double perc_pokrytie);
+
+//Funkcia, ktora ulozi informacie o rozmeroch, prekazkach do suboru
+void zapis_mapu_do_suboru(const Mapa *mapa, FILE *subor);
+
+//Funkcia ktora nacita mapu zo suboru
+bool nacitaj_mapu_zo_suboru(Mapa *mapa, FILE *subor);
+//Fukcia, ktora zisti ci je mapa priechodna
+bool je_mapa_priechodna(const Mapa *mapa);
+//Funkcia na kontrolu okrajov
+int wrap_suradnicu(int hodnota, int min, int max);
+
+
+
+
+#endif //NAHODNAPOCHODZKA_MAPA_H

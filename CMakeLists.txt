@@ -1,20 +1,39 @@
 cmake_minimum_required(VERSION 3.10)
-project(NahodnaPochodzkaPOS C)
+project(Simulacia_IPC)
 
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 
-# Pridáme priečinok s hlavičkovými súbormi
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wextra")
+
+find_package(Threads REQUIRED)
+
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
+
 include_directories(include)
 
-# Knižnice potrebné pre POS (vlákna a zdieľaná pamäť)
-find_package(Threads REQUIRED)
-set(THREADS_PREFER_PTHREAD_FLAG ON)
+add_library(common STATIC
+        src/simulacia.c
+        src/mapa.c
+        src/chodec.c
+)
 
-# --- Zatiaľ budeme kompilovať len pomocný test ---
-# Keď vytvoríš server.c a main.c, pridáme ich sem.
-# Teraz vytvoríme len malý test pre mapu.
-add_executable(Nahodna_Pochodzka_POS src/mapa.c)
 
-# Prepojenie s knižnicami (rt je pre zdieľanú pamäť, m pre matematiku)
-target_link_libraries(Nahodna_Pochodzka_POS PRIVATE Threads::Threads rt m)
+add_executable(server src/server.c)
+
+
+target_link_libraries(server PRIVATE
+        common
+        m
+        Threads::Threads
+        rt
+)
+
+
+add_executable(client
+        src/klient.c
+        src/main.c
+        src/inputHandler.c
+)
+
+target_link_libraries(client PRIVATE common Threads::Threads m)
